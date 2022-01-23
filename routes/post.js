@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Hashtag } = require('../models');
+const { Post, Hashtag,User } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -54,6 +54,22 @@ router.post('/', isLoggedIn, upload2.none(), async (req, res, next) => {
       await post.addHashtags(result.map(r => r[0]));
     }
     res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/profile_img', isLoggedIn, upload2.none(), async (req, res, next) => {
+  try {
+    console.log(req.user);
+    const user = await User.findOne({ where: { id: req.user.id } });
+    console.log(user.id)
+    console.log(req.body.url)
+    await user.update({
+      profile_img:req.body.url
+    });
+    res.redirect('/profile');
   } catch (error) {
     console.error(error);
     next(error);
