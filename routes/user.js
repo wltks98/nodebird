@@ -1,5 +1,5 @@
 const express = require('express');
-
+const bcrypt = require('bcrypt');
 const { isLoggedIn } = require('./middlewares');
 const User = require('../models/user');
 
@@ -48,6 +48,26 @@ router.get('/profile_img', isLoggedIn, async (req, res, next) => {
   }
 });
 
+//회원정보 수정
+router.post('/update', isLoggedIn, async (req, res, next) => {
+  try {
+    const { email, nick, password } = req.body;
+
+    const hash = await bcrypt.hash(password, 12);
+    await User.update({
+      email,
+      nick,
+      password: hash,
+    },{
+      where:{id:req.user.id}
+    })
+    res.redirect('/profile')
+
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 
 module.exports = router;
