@@ -15,7 +15,6 @@ router.get('/', async (req, res, next) => {
 
     const rooms = await user.getRooms({
     });
-    console.log(rooms)
     res.render('chat_main', { rooms, title: '채팅방' });
   } catch (error) {
     console.error(error);
@@ -41,7 +40,7 @@ try {
 
     const io = req.app.get('io');
     io.of('/room').emit('newRoom', newRoom);
-    res.redirect('/');
+    res.redirect('/chat');
     // const io = req.app.get('io');
     // io.of('/room').emit('newRoom', newRoom);
     // res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
@@ -54,28 +53,34 @@ try {
 //방 입장
 router.get('/room/:id', async (req, res, next) => {
     try {
-      const room = await Room.findOne({ _id: req.params.id });
+      const room = await Room.findOne({ id: req.params.id });
       const io = req.app.get('io');
-      if (!room) {
-        return res.redirect('/?error=존재하지 않는 방입니다.');
-      }
-      if (room.password && room.password !== req.query.password) {
-        return res.redirect('/?error=비밀번호가 틀렸습니다.');
-      }
-      const { rooms } = io.of('/chat').adapter;
-      if (rooms && rooms[req.params.id] && room.max <= rooms[req.params.id].length) {
-        return res.redirect('/?error=허용 인원이 초과하였습니다.');
-      }
-      const chats = await Chat.find({ room: room._id }).sort('createdAt');
-      return res.render('chat', {
+    
+      const chats = await room.getChats({}); //.sort('createdAt')
+
+      return res.render('chat_chat', {
         room,
-        title: room.title,
         chats,
-        user: req.session.color,
+        user:req.user.id
       });
     } catch (error) {
       console.error(error);
       return next(error);
+    }
+  });
+
+  router.post('/room/:id/chat', async (req, res, next) => {
+    try {
+      const chat = await Chat.create({
+        message: req.body.chat,
+        RoomId:req.params.id,
+        UserId:req.user.id
+      });
+      req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
+      res.send('ok');
+    } catch (error) {
+      console.error(error);
+      next(error);
     }
   });
 

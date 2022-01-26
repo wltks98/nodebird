@@ -56,5 +56,6 @@ module.exports = class User extends Sequelize.Model {
     });
 
     db.User.belongsToMany(db.Room, { through: 'RoomUser' });
+    db.User.hasOne(db.Chat);
   }
 };

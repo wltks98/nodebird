@@ -27,34 +27,25 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  const socket = io.connect('http://localhost:8001/chat/room', { // 네임스페이스
+  const socket = io.connect('http://localhost:8001/room', { // 네임스페이스
     path: '/socket.io',
   });
 
   socket.on('newRoom', function (data) { // 새 방 이벤트 시 새 방 생성
     const tr = document.createElement('tr');
     let td = document.createElement('td');
-    td.textContent = data.title;
+
+    td.textContent = data.id;
     tr.appendChild(td);
-    td = document.createElement('td');
-    td.textContent = data.password ? '비밀방' : '공개방';
-    tr.appendChild(td);
-    td = document.createElement('td');
-    td.textContent = data.max;
-    tr.appendChild(td);
-    td = document.createElement('td');
-    td.style.color = data.owner;
-    td.textContent = data.owner;
-    tr.appendChild(td);
+
     td = document.createElement('td');
     const button = document.createElement('button');
     button.textContent = '입장';
-    button.dataset.password = data.password ? 'true' : 'false';
-    button.dataset.id = data._id;
+    button.dataset.id = data.id;
     button.addEventListener('click', addBtnEvent);
     td.appendChild(button);
     tr.appendChild(td);
-    tr.dataset.id = data._id;
+    tr.dataset.id = data.id;
     document.querySelector('table tbody').appendChild(tr); // 화면에 추가
   });
 
@@ -67,12 +58,9 @@
   });
 
   function addBtnEvent(e) { // 방 입장 클릭 시
-    if (e.target.dataset.password === 'true') {
-      const password = prompt('비밀번호를 입력하세요');
-      location.href = '/room/' + e.target.dataset.id + '?password=' + password;
-    } else {
-      location.href = '/room/' + e.target.dataset.id;
-    }
+
+    location.href = '/chat/room/' + e.target.dataset.id;
+
   }
 
   document.querySelectorAll('.join-btn').forEach(function (btn) {
