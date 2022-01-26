@@ -1,4 +1,4 @@
-{% extends 'chat_layout.html' %}
+{% extends 'layout.html' %}
 
 {% block content %}
 <h1>채팅방</h1>
@@ -15,7 +15,7 @@
       <tr data-id="{{room.id}}">
         <td>{{room.id}}</td>
         <td>
-          <button>입장</button>
+          <button data-id="{{room.id}}" class="join-btn"> 입장</button>
         </td>
       </tr>
     {% endfor %}

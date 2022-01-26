@@ -41,9 +41,6 @@ try {
     const io = req.app.get('io');
     io.of('/room').emit('newRoom', newRoom);
     res.redirect('/chat');
-    // const io = req.app.get('io');
-    // io.of('/room').emit('newRoom', newRoom);
-    // res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
 } catch (error) {
     console.error(error);
     next(error);
@@ -53,15 +50,15 @@ try {
 //방 입장
 router.get('/room/:id', async (req, res, next) => {
     try {
-      const room = await Room.findOne({ id: req.params.id });
-      const io = req.app.get('io');
-    
+      const room = await Room.findOne({ where:{id: req.params.id} });
+      //const io = req.app.get('io');
+
       const chats = await room.getChats({}); //.sort('createdAt')
 
       return res.render('chat_chat', {
         room,
         chats,
-        user:req.user.id
+        username:req.user.id
       });
     } catch (error) {
       console.error(error);
@@ -69,20 +66,21 @@ router.get('/room/:id', async (req, res, next) => {
     }
   });
 
-  router.post('/room/:id/chat', async (req, res, next) => {
-    try {
-      const chat = await Chat.create({
-        message: req.body.chat,
-        RoomId:req.params.id,
-        UserId:req.user.id
-      });
-      req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
-      res.send('ok');
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
-  });
+//채팅입력
+router.post('/room/:id/chat', async (req, res, next) => {
+  try {
+    const chat = await Chat.create({
+      message: req.body.chat,
+      RoomId:req.params.id,
+      UserId:req.user.id
+    });
+    req.app.get('io').of('/chat').to(req.params.id).emit('chat', chat);
+    res.send('ok');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 
 module.exports = router;
