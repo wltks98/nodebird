@@ -11,8 +11,14 @@ router.post('/join', isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({ where: { email } });
     if (exUser) {
-      return res.redirect('/join?error=exist');
+      return res.redirect('/join?error=email_exist');
     }
+
+    const exUser2 = await User.findOne({ where: { nick } });
+    if (exUser2) {
+      return res.redirect('/join?error=nick_exist');
+    }
+
     const hash = await bcrypt.hash(password, 12);
     await User.create({
       email,

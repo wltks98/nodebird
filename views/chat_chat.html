@@ -9,12 +9,16 @@
       {% for chat in chats %}
         {% if chat.UserId == username %}
           <div class="mine" >
+              <div>{{user.nick}}</div>
               <div>{{chat.message}}</div>
           </div>
         {% else %}
           <div class="other" >
-              <div>{{chat.message}}</div>
-          </div>
+              <div class="other_nick" value='{{chat.UserId}}' style="display: none;">{{chat.UserId}}</div>
+              <img class="other_profile" src=""  width="60">
+          <div>{{chat.message}}</div>
+              
+          </div><div>{{chat.createdAt}}</div>
         {% endif %}
       {% endfor %}
     </div>
@@ -53,7 +57,7 @@
         div.classList.add('other');
       }
       const name = document.createElement('div');
-      name.textContent = data.UserId;
+      name.textContent = '{{user.nick}}';
       div.appendChild(name);
 
       const chat = document.createElement('div');
@@ -75,6 +79,27 @@
             console.error(err);
           });
       }
+    });
+
+
+
+    const nicks=document.querySelectorAll("div.other_nick");
+
+    nicks.forEach(function(nick) {
+      const userId=nick.textContent
+      axios.post(`/user/${userId}/info`)
+          .then((res) => {
+            nick.textContent=(res.data.userinfo.nick)
+            nick.style.display = 'block';
+            profiles=document.querySelectorAll("img.other_profile");
+            profiles.forEach(function(profile){
+              profile.src = res.data.userinfo.profile_img;
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      
     });
 
   </script>

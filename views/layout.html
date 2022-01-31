@@ -18,7 +18,7 @@
           {% if user and user.id %}
             <div class="user-name">{{'안녕하세요! ' + user.nick + '님'}}</div>
 
-            <div><img id="profile_img" src="" width="50"></div> <!--프로필 사진-->
+            <div><img id="profile_img" src="{{user.profile_img}}" width="50"></div> <!--프로필 사진-->
 
             <div class="half">
               <div>팔로잉</div>
@@ -62,16 +62,6 @@
           alert(new URL(location.href).searchParams.get('loginError'));
         }
       };
-
-      if (document.getElementById('img')) { //프로필 사진 띄우기
-        axios.get('/user/profile_img')
-          .then((res) => {
-            document.getElementById('profile_img').src = res.data.url;
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-    }
 
     </script>
     {% block script %}

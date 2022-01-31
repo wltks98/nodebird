@@ -30,11 +30,23 @@ router.get('/room', (req, res) => {
 //방 생성
 router.post('/room', async (req, res, next) => {
 try {
-    const newRoom = await Room.create({
-    });
-
+    
     const user1=await User.findOne({where:{id:req.user.id}})
     const user2=await User.findOne({where:{nick:req.body.follwer_nick}})
+
+    const exRoom =await Room.findOne({where:{name:user1.nick+", "+user2.nick}})
+    const exRoom2 =await Room.findOne({where:{name:user2.nick+", "+user1.nick}})
+
+    //이미 방이 있을 시
+    if(exRoom || exRoom2){ 
+      const io = req.app.get('io');
+      io.of('/room').emit('newRoom', null);
+      return res.redirect('/chat');
+    }
+
+    const newRoom = await Room.create({
+      name:user1.nick+", "+user2.nick
+    });
 
     await newRoom.addUsers([user1,user2]);
 

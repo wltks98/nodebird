@@ -69,5 +69,18 @@ router.post('/update', isLoggedIn, async (req, res, next) => {
   }
 });
 
+//회원정보 
+router.post('/:id/info', isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.params.id } });
+    
+    res.json({userinfo:user});
+
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 
 module.exports = router;
