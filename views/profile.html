@@ -7,6 +7,7 @@
       {% if user.Followings %}
         {% for following in user.Followings %}
           <div>{{following.nick}}</div>
+           <button class="twit-unfollow">팔로우끊기</button>   
         {% endfor %}
       {% endif %}
     </div>
@@ -15,6 +16,9 @@
       {% if user.Followers %}
         {% for follower in user.Followers %}
           <div>{{follower.nick}}</div>
+          {% if not followerIdList.includes(follower.id) %}
+              <button class="twit-follow">팔로우하기</button>
+           {%endif%}
         {% endfor %}
       {% endif %}
     </div>

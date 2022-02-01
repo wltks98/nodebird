@@ -76,4 +76,15 @@ router.post('/profile_img', isLoggedIn, upload2.none(), async (req, res, next) =
   }
 });
 
+router.delete('/:id/delete', isLoggedIn, async (req, res, next) => {
+  try {
+    await Post.destroy({where:{id:req.params.id}});
+
+    res.send();
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;

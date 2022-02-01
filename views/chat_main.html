@@ -1,6 +1,36 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+<div class="timeline">
+  <div class="followings half">
+    <h2>팔로잉 목록</h2>
+    {% if user.Followings %}
+      {% for following in user.Followings %}
+        <div>{{following.nick}}</div>
+        <form action="/chat/room" method="post">
+          <input type="text" name="follwer_nick" placeholder="{{following.nick}}" style="display:none">
+          <div>
+            <button type="submit">채팅하기</button>
+          </div>
+        </form>  
+      {% endfor %}
+    {% endif %}
+  </div>
+  <div class="followers half">
+    <h2>팔로워 목록</h2>
+    {% if user.Followers %}
+      {% for follower in user.Followers %}
+        <div>{{follower.nick}}</div>
+        <form action="/chat/room" method="post">
+          <input type="text" name="follwer_nick" placeholder="{{follower.nick}}" style="display:none">
+          <div>
+            <button type="submit">채팅하기</button>
+          </div>
+        </form>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
 <h1>채팅방</h1>
 <fieldset>
   <legend>채팅방 목록</legend>
