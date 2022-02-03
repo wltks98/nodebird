@@ -29,9 +29,37 @@ router.get('/', async (req, res, next) => {
       },
       order: [['createdAt', 'DESC']],
     });
+
+    const friends=[];
+    if(req.user){
+
+      const alluser = await User.findAll({});
+      
+      for(let i=0; i<5; i++){
+        
+        const friend=alluser[Math.floor(Math.random() * alluser.length)];
+  
+        if(friend.id===req.user.id){
+          continue;
+        }
+        else if((req.user.Followings.map(f => f.id)).includes(friend.id)){
+          continue;
+        }
+  
+        else if(friends.includes(friend)){
+          continue;
+        }
+  
+        friends.push(friend)
+        
+      }
+
+    }
+
     res.render('main', {
       title: 'NodeBird',
       twits: posts,
+      friends:friends,
     });
   } catch (err) {
     console.error(err);
@@ -60,5 +88,7 @@ router.get('/hashtag', async (req, res, next) => {
     return next(error);
   }
 });
+
+
 
 module.exports = router;

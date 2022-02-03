@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
     <div class="timeline">
       {% if user %}
         <div>
@@ -15,11 +16,12 @@
             <div>
               <label id="img-label" for="img">사진 업로드</label>
               <input id="img" type="file" accept="image/*">
-              <button id="twit-btn" type="submit" class="btn">짹짹</button>
+              <button id="twit-btn" type="submit" class="btn">업로드</button>
             </div>
           </form>
         </div>
       {% endif %}
+      
       <div class="twits">
         <form id="hashtag-form" action="/hashtag">
           <input type="text" name="hashtag" placeholder="태그 검색">
@@ -49,6 +51,15 @@
         {% endfor %}
       </div>
     </div>
+{% endblock %}
+{% block content2 %}
+<br><div><h3>친구 추천</h3></div><br>
+{% for friend in friends %}
+<img src="{{friend.profile_img}}" width="50" height="50"><div style="display: inline;">{{friend.nick}}</div><button class="twit-follow" style="float: right;">
+  팔로우하기</button><br>
+{% endfor %}
+
+
 {% endblock %}
 
 {% block script %}
@@ -123,11 +134,11 @@
                   console.error(err);
                 });
             }
-          
-        
       });
     });
 
+    
+ 
 
   </script>
 {% endblock %}

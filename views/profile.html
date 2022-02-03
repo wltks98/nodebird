@@ -6,8 +6,8 @@
       <h2>팔로잉 목록</h2>
       {% if user.Followings %}
         {% for following in user.Followings %}
-          <div>{{following.nick}}</div>
-           <button class="twit-unfollow">팔로우끊기</button>   
+          <span>{{following.nick}}</span>
+           <button class="twit-unfollow">팔로우끊기</button><br> 
         {% endfor %}
       {% endif %}
     </div>
@@ -15,17 +15,18 @@
       <h2>팔로워 목록</h2>
       {% if user.Followers %}
         {% for follower in user.Followers %}
-          <div>{{follower.nick}}</div>
+          <span>{{follower.nick}}</span>
           {% if not followerIdList.includes(follower.id) %}
               <button class="twit-follow">팔로우하기</button>
            {%endif%}
+           <br>
         {% endfor %}
       {% endif %}
     </div>
   </div>
-
-  <div>
-    프로필 사진
+  <h3 style="margin-top: 30px;">회원정보 수정</h3>
+  <div style="margin-top: 30px;">
+    <h4>프로필 사진</h4>
     <form id="twit-form" action="/post/profile_img" method="post" enctype="multipart/form-data">
       <div class="img-preview">
         <img id="img-preview" src="" style="display: none;" width="250" alt="미리보기">
@@ -40,8 +41,8 @@
   </div>
   <div>
     <form id="update-form" action="/user/update" method="post">
-      닉네임 <input type="text" name="nick" value="{{user.nick}}"><br/>
-      비밀번호 <input type="password" name="password" value=""><br/>
+      닉네임 <input type="text" name="nick" value="{{user.nick}}" style="margin-top: 30px;"><br/>
+      비밀번호 <input type="password" name="password" value="" style="margin-top: 10px;"><br/>
       <button id="update-btn" type="submit" class="btn">적용</button>
     </form>
     

@@ -20,8 +20,8 @@
   </div>
 </div>
   <h1>{{title}}</h1>
-  <a href="/" id="exit-btn">방 나가기</a>
-  <fieldset>
+  <a href="/chat" id="exit-btn">방 나가기</a>
+  <fieldset class="chat-field">
     <legend>채팅 내용</legend>
     <div id="chat-list">
       {% for chat in chats %}
@@ -36,14 +36,14 @@
               <img class="other_profile" src=""  width="60">
           <div>{{chat.message}}</div>
               
-          </div><div>{{chat.createdAt}}</div>
+          </div>
         {% endif %}
       {% endfor %}
     </div>
   </fieldset>
   <form action="/chat/chat" id="chat-form" method="post">
     <input type="text" id="chat" name="chat">
-    <button type="submit">전송</button>
+    <button class="chat_submit" type="submit">전송</button>
   </form>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
