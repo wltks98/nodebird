@@ -6,7 +6,7 @@ const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/',isLoggedIn, async (req, res, next) => {
   try {
 
     //const rooms=await Room.findAll({});
@@ -23,12 +23,12 @@ router.get('/', async (req, res, next) => {
 });
 
 //방 생성 페이지로 이종
-router.get('/room', (req, res) => { 
+router.get('/room',isLoggedIn, (req, res) => { 
     res.render('chat_room', { title: '채팅방 생성' });
   });
   
 //방 생성
-router.post('/room', async (req, res, next) => {
+router.post('/room',isLoggedIn, async (req, res, next) => {
 try {
     
     const user1=await User.findOne({where:{id:req.user.id}})
@@ -60,7 +60,7 @@ try {
 });
 
 //방 입장
-router.get('/room/:id', async (req, res, next) => {
+router.get('/room/:id',isLoggedIn, async (req, res, next) => {
     try {
       const room = await Room.findOne({ where:{id: req.params.id} });
       //const io = req.app.get('io');
@@ -79,7 +79,7 @@ router.get('/room/:id', async (req, res, next) => {
   });
 
 //채팅입력
-router.post('/room/:id/chat', async (req, res, next) => {
+router.post('/room/:id/chat',isLoggedIn, async (req, res, next) => {
   try {
     const chat = await Chat.create({
       message: req.body.chat,
