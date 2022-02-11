@@ -35,18 +35,6 @@ router.post('/:id/unfollow', isLoggedIn, async (req, res, next) => {
   }
 });
 
-//프로필 사진 가져오기
-router.get('/profile_img', isLoggedIn, async (req, res, next) => {
-  try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    console.log(user.profile_img)
-    res.json({ url: user.profile_img });
-    
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
 
 //회원정보 수정
 router.post('/update', isLoggedIn, async (req, res, next) => {
